@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  db:
+    image: "postgres:12.2"
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  app:
+    build: .
+    command: bash entrypoint.sh
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_PASSWORD=postgres
+    volumes:
+      - .:/strv-addressbook
+      - gems:/gems
+    depends_on:
+      - db
+
+volumes:
+  postgres:
+  gems:
